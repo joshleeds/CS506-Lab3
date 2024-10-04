@@ -3,11 +3,23 @@ from PIL import Image
 
 # Function to load and preprocess the image
 def load_image(image_path):
-    raise NotImplementedError('You need to implement this function')
+    image = Image.open(image_path)
+    image = image.convert("RGB")
+    image_np = np.array(image)
+    return image_np
 
 # Function to perform SVD on a single channel of the image matrix
 def compress_channel_svd(channel_matrix, rank):
-    raise NotImplementedError('You need to implement this function')
+    
+    U, S, Vt = np.linalg.svd(channel_matrix, full_matrices=False)
+
+    S = np.diag(S[:rank])
+    U = U[:, :rank]
+    Vt = Vt[:rank, :]
+
+    compressed_channel = np.dot(U, np.dot(S, Vt))
+    
+    return compressed_channel
 
 # Function to perform SVD for image compression
 def image_compression_svd(image_np, rank):
